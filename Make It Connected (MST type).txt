@@ -1,0 +1,141 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+#define endl        "\n"
+#define ll          long long
+#define READ(x)     freopen(x,"r",stdin)
+#define WRITE(x)    freopen(x,"w",stdout)
+#define BOOST1       ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL)
+#define pb          push_back
+#define gcd(a, b)   __gcd(a, b)
+#define lcm(a, b)   (a * b) / gcd(a, b)
+#define mem(x,y)    memset(x,y,sizeof x )
+#define srt(vec)    sort(vec.begin(), vec.end())
+#define all(x)      x.begin(),x.end()
+#define all(v)      v.begin(), v.end()
+#define priority    vector<int>, greater<int>
+#define uniqVec(x)  sort(all(x));x.erase(unique(all(x)),x.end())
+#define for1(n) for(int i = 0; i < n;i++)
+#define for2(n) for(int i = 1; i <= n;i++)
+#define yes         printf("YES\n")
+#define no          printf("NO\n")
+
+const ll mod = 1000000007;
+const int N = 1000000;
+
+
+
+
+int parent[N];
+int sizeA[N];
+
+void make_set(int v) {
+    parent[v] = v;
+    sizeA[v] = 1;
+}
+
+int find_set(int v) {
+    if (v == parent[v])
+        return v;
+    return parent[v] = find_set(parent[v]);
+}
+
+void union_sets(int a, int b) {
+    a = find_set(a);
+    b = find_set(b);
+    if (a != b)
+    {
+        if(sizeA[a] < sizeA[b])
+        {
+            swap(a,b);
+        }
+        parent[b] = a;
+        sizeA[a] += sizeA[b];
+    }
+}
+
+
+/// Solution ###
+
+
+int main()
+{
+    BOOST1;
+
+    ll a,b,c,x,y;
+    ll w;
+    string s;
+
+
+
+    cin>>x>>y;
+    ll arr[x+1];
+
+    for(ll i=1; i<=x; i++)
+    {
+        make_set(i);
+    }
+
+    ll minnum = INT64_MAX;;
+    ll minind = -1;
+
+  //  int x, y;
+
+   // cin>>x>>y;
+
+    for(ll i=1; i<=x; i++)
+    {
+        cin>>arr[i];
+        c = arr[i];
+        if(c<minnum)
+        {
+            minnum = c;
+            minind = i;
+        }
+    }
+
+  //  cout<<minnum<<endl;
+  //  cout<<minind<<endl;
+
+
+    vector<pair<ll,pair<ll,ll>>>vec;
+
+  //  ll cost=0;
+
+    for(ll i=1; i<=x; i++)
+    {
+        if(i==minind)
+        {
+            continue;
+        }
+        else
+        {
+            ll nm = minnum + arr[i];
+            vec.pb({nm,{i,minind}});
+        }
+    }
+
+    ll k,l;
+    for(ll i=1; i<=y; i++)
+    {
+        cin>>k>>l>>w;
+         vec.pb({w,{k,l}});
+    }
+
+    srt(vec);
+    ll total_cost = 0;
+    for(auto [wn,m] : vec)
+    {
+        auto [x,y] = m;
+        if(find_set(x) == find_set(y)) continue;
+        total_cost += wn;
+        union_sets(x,y);
+    }
+
+    cout<<total_cost<<endl;
+
+
+
+    return 0;
+}
